@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="120dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/qr_scan_title"
+                android:textColor="@color/black"
+                android:textSize="15sp"/>
+            <EditText
+                android:id="@+id/et_qr_code"
+                android:textSize="15sp"
+                android:maxLines="1"
+                android:maxLength="6"
+                android:inputType="number|phone"
+                android:digits="1234567890"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <CheckBox
+                android:id="@+id/cbState"
+                android:checked="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginLeft="3dp"
+                android:text="@string/confor"
+                android:textSize="14sp"
+                android:textColor="@color/black"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <Button
+            android:id="@+id/btnSubmitLocal"
+            android:layout_width="150dp"
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_height="wrap_content"
+            android:textSize="15sp"
+            android:text="@string/subit_local"
+            android:background="@drawable/submit_data_bg"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_width="70dp"
+        android:layout_height="40dp"
+        android:text="注销"/>
+</RelativeLayout>
