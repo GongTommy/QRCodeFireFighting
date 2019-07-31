@@ -6,8 +6,8 @@
 
     <Button
         android:id="@+id/btnRefresh"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:text="@string/refresh"
@@ -15,43 +15,47 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_width="130dp"
+        android:layout_height="40dp"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginRight="10dp"
+        android:text="註銷"
+        android:background="@drawable/normal_bg"
+        app:layout_constraintBottom_toBottomOf="@+id/btnRefresh"
+        />
+    <ImageView
+        android:id="@+id/ivSearch"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
+        android:layout_marginTop="10dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/search_icon"/>
+
+    <AutoCompleteTextView
+        android:id="@+id/atvContent"
+        app:layout_constraintBottom_toBottomOf="@+id/ivSearch"
+        app:layout_constraintLeft_toRightOf="@+id/ivSearch"
+        android:maxLines="1"
+        android:imeOptions="actionDone"
+        android:singleLine="true"
+        android:layout_width="250dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="48dp"
+        android:completionHint="请输入搜索内容"
+        android:completionThreshold="1"
+        android:dropDownHorizontalOffset="5dp"
+        android:layout_marginTop="10dp"
+        />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rlSelect"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginTop="20dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnPre"
-        app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/atvContent"
         app:layout_constraintVertical_weight="1" />
-
-    <Button
-        android:id="@+id/btnPre"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/normal_bg"
-        android:text="@string/last_step"
-        app:layout_constraintRight_toLeftOf="@+id/btnNext"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent" />
-
-    <Button
-        android:id="@+id/btnNext"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/normal_bg"
-        android:text="@string/next_step"
-        app:layout_constraintLeft_toRightOf="@+id/btnPre"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
 </android.support.constraint.ConstraintLayout>

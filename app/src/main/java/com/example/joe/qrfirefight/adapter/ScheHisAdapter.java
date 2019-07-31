@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import com.example.joe.qrfirefight.R;
+import com.example.joe.qrfirefight.model.ScheTimeSubmitEntity;
+
 import java.util.List;
 
 /**
@@ -14,10 +16,10 @@ import java.util.List;
  */
 
 public class ScheHisAdapter extends RecyclerView.Adapter<ScheHisAdapter.ScheHisViewHolder>{
-    private List<String> historyModels;
+    private List<ScheTimeSubmitEntity> historyModels;
     private ScheHisAdapter.OnItemDelClickListener onItemDelClickListener;
 
-    public ScheHisAdapter(List<String> historyModels){
+    public ScheHisAdapter(List<ScheTimeSubmitEntity> historyModels){
         this.historyModels = historyModels;
     }
 
@@ -40,7 +42,10 @@ public class ScheHisAdapter extends RecyclerView.Adapter<ScheHisAdapter.ScheHisV
         if (historyModels == null || historyModels.size() == 0){
             return;
         }
-        holder.tvScheNum.setText(historyModels.get(position));
+        ScheTimeSubmitEntity entity = historyModels.get(position);
+        holder.tvScheNum.setText(entity.getBillno());
+        holder.tvDate.setText(entity.getUploaddate());
+        holder.tvEquipNum.setText(entity.getPackbarcode());
         holder.btnDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

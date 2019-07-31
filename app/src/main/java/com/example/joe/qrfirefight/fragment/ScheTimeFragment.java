@@ -1,33 +1,55 @@
 package com.example.joe.qrfirefight.fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.database.DataSetObserver;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.TextView;
 import com.example.joe.qrfirefight.R;
 import com.example.joe.qrfirefight.activity.ScheTimeActivity;
+import com.example.joe.qrfirefight.adapter.CustomArrayAdapter;
 import com.example.joe.qrfirefight.adapter.SelectorAdapter;
-import com.example.joe.qrfirefight.utils.Utils;
+import com.example.joe.qrfirefight.model.ScheTimeEntity;
+import com.example.joe.qrfirefight.model.ScheTimeSubmitEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by 18145288 on 2019/6/20.
+ * Created by 18145288 on 2019/6/20
  */
 
-public class ScheTimeFragment extends Fragment implements View.OnClickListener{
+public class ScheTimeFragment extends Fragment {
     private final String TAG = "ScheTimeFragment";
-    private Button btnPre, btnNext, btnRefresh;
+    private Button btnRefresh;
     private RecyclerView rlSelect;
     private SelectorAdapter selectorAdapter;
     private ViewPager parentVp;
+    private AutoCompleteTextView atvContent;
+    private List<String> autoDatas;
+    private CustomArrayAdapter<String> atvAdapter;
+    private Button btnLogout;
+
 
     @Nullable
     @Override
@@ -41,43 +63,121 @@ public class ScheTimeFragment extends Fragment implements View.OnClickListener{
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnNext = view.findViewById(R.id.btnNext);
-        btnPre = view.findViewById(R.id.btnPre);
         btnRefresh = view.findViewById(R.id.btnRefresh);
         rlSelect = view.findViewById(R.id.rlSelect);
+        atvContent = view.findViewById(R.id.atvContent);
+        btnLogout = view.findViewById(R.id.btnLogout);
 
         initData();
     }
 
+    public void clearAtv() {
+        if (atvContent != null) {
+            atvContent.setText("");
+        }
+    }
+
     private void initData() {
-        btnPre.setOnClickListener(this);
-        btnNext.setOnClickListener(this);
-        List<String> list = new ArrayList<>();
-        for(int i = 0; i < 8; i++){
-            list.add("A");
+        btnRefresh.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
+                scheTimeActivity.refreshScheTimeDatas();
+            }
+        });
+
+
+        atvContent.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                hideSoftKeyboard();
+                parentVp.setCurrentItem(parentVp.getCurrentItem() + 1);
+                TextView textView = (TextView) view;
+                if (textView != null && textView.getText() != null){
+                    String billNo = textView.getText().toString();
+                    Log.i(TAG, "billNo:" + billNo);
+                    ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
+                    scheTimeActivity.getScheTimeDataDetail(billNo);
+                }
+            }
+        });
+        atvContent.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (i == KeyEvent.KEYCODE_ENTER){
+                    TextView tv = (TextView) view;
+                    if (tv != null && tv.getText() != null){
+                        String text = tv.getText().toString();
+                        if (text != null && autoDatas != null){
+                            if (autoDatas.contains(text)){
+                                Log.i(TAG, "billNo:" + text);
+                                ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
+                                scheTimeActivity.getScheTimeDataDetail(text);
+
+                                hideSoftKeyboard();
+                            }
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
+        btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+                        .setMessage("是否注销")
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
+                                if (scheTimeActivity != null){
+                                    scheTimeActivity.showAlertDialog();
+                                }
+                            }
+                        })
+                        .setNegativeButton("取消", null);
+                AlertDialog alertDialog = builder.create();
+                alertDialog.setCancelable(false);
+                alertDialog.setCanceledOnTouchOutside(false);
+                alertDialog.show();
+            }
+        });
+    }
+
+    public void hideSoftKeyboard() {
+        if (getActivity() != null && atvContent != null){
+            //隐藏软键盘
+            InputMethodManager inputMethodManager =
+                    (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+            inputMethodManager.hideSoftInputFromWindow(atvContent.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+    public void refreshData(List<ScheTimeEntity> list) {
+        if (list == null || list.size() == 0) {
+            return;
         }
         selectorAdapter = new SelectorAdapter(list, getActivity());
         rlSelect.setAdapter(selectorAdapter);
         rlSelect.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        //首页不启用“上一步”按钮
-        btnPre.setEnabled(false);
+
+        autoDatas = new ArrayList<>();
+        for (ScheTimeEntity entity : list) {
+            if (entity == null) {
+                continue;
+            }
+            autoDatas.add(entity.getBillno());
+        }
+        atvAdapter = new CustomArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_dropdown_item_1line, autoDatas);
+        atvContent.setAdapter(atvAdapter);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.btnRefresh:
-                break;
-            case R.id.btnNext:
-                if (selectorAdapter != null && selectorAdapter.isSelected()){
-                    parentVp.setCurrentItem(parentVp.getCurrentItem() + 1);
-                }else {
-                    Utils.getInstance().showShortToast("请先选择条目");
-                }
-                break;
-            case R.id.btnPre:
-                parentVp.setCurrentItem(parentVp.getCurrentItem() - 1);
-                break;
+    public void reset(){
+        if (atvContent != null){
+            atvContent.setText("");
         }
     }
 }

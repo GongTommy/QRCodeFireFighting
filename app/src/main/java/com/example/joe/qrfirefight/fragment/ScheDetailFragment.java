@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,11 @@ import android.widget.Button;
 
 import com.example.joe.qrfirefight.R;
 import com.example.joe.qrfirefight.activity.ScheTimeActivity;
+import com.example.joe.qrfirefight.adapter.DetailAdapter;
+import com.example.joe.qrfirefight.adapter.SelectorAdapter;
+import com.example.joe.qrfirefight.model.ScheTimeDetailEntity;
+
+import java.util.List;
 
 /**
  * Created by 18145288 on 2019/6/26.
@@ -20,6 +26,8 @@ import com.example.joe.qrfirefight.activity.ScheTimeActivity;
 public class ScheDetailFragment extends Fragment implements View.OnClickListener {
     private Button btnPre, btnNext;
     private ViewPager parentVp;
+    private RecyclerView rlDetail;
+    private DetailAdapter selectorAdapter;
 
     @Nullable
     @Override
@@ -33,6 +41,7 @@ public class ScheDetailFragment extends Fragment implements View.OnClickListener
         super.onViewCreated(view, savedInstanceState);
         btnPre = view.findViewById(R.id.btnPre);
         btnNext = view.findViewById(R.id.btnNext);
+        rlDetail = view.findViewById(R.id.rlDetail);
         initData();
     }
 
@@ -50,10 +59,20 @@ public class ScheDetailFragment extends Fragment implements View.OnClickListener
         switch (v.getId()) {
             case R.id.btnNext:
                 parentVp.setCurrentItem(parentVp.getCurrentItem() + 1);
+                ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
+                if (scheTimeActivity != null){
+                    scheTimeActivity.refreshSubmitPage();
+                }
                 break;
             case R.id.btnPre:
                 parentVp.setCurrentItem(parentVp.getCurrentItem() - 1);
                 break;
         }
+    }
+
+    public void refreshDatasDetail(List<ScheTimeDetailEntity> list){
+        selectorAdapter = new DetailAdapter(list, getActivity());
+        rlDetail.setAdapter(selectorAdapter);
+        rlDetail.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
     }
 }

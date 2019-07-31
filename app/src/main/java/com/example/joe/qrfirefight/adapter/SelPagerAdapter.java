@@ -3,7 +3,6 @@ package com.example.joe.qrfirefight.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import com.example.joe.qrfirefight.fragment.ScheTimeFragment;
 import java.util.List;
 
 /**

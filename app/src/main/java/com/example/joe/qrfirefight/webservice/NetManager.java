@@ -1,26 +1,15 @@
 package com.example.joe.qrfirefight.webservice;
 
-import android.app.LoaderManager;
 import android.content.Context;
-import android.support.design.widget.TabLayout;
-import android.util.Log;
 
 import com.example.joe.qrfirefight.model.HistoryModel;
-import com.example.joe.qrfirefight.model.UploadHisMsgModel;
+import com.example.joe.qrfirefight.model.ScheTimeSubmitEntity;
 import com.example.joe.qrfirefight.webservice.rxjava.WsCallBack;
 import com.example.joe.qrfirefight.webservice.rxjava.WsTransformer;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import java.net.CookieManager;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.reactivex.Observer;
-import io.reactivex.disposables.Disposable;
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
@@ -74,6 +63,31 @@ public class NetManager {
 
     public void submitHisMsg(List<HistoryModel> historyModels, WsCallBack wsCallBack){
         api.submitHisMsg(historyModels)
+                .compose(WsTransformer.instance())
+                .subscribe(wsCallBack);
+    }
+
+    /**
+     * 获取排期单列表信息
+     * @param wsCallBack
+     */
+    public void getScheTimeDatas(WsCallBack wsCallBack){
+        api.getScheTimeDatas()
+                .compose(WsTransformer.instance())
+                .subscribe(wsCallBack);
+    }
+
+    /**
+     * 获取单个排期单的详细信息
+     */
+    public void getScheTimeDetailData(String billNo, WsCallBack wsCallBack){
+        api.getScheTimeDetailData(billNo)
+                .compose(WsTransformer.instance())
+                .subscribe(wsCallBack);
+    }
+
+    public void submitScheTimeDatas(List<ScheTimeSubmitEntity> list, WsCallBack wsCallBack){
+        api.submitSchedulAutoData(list)
                 .compose(WsTransformer.instance())
                 .subscribe(wsCallBack);
     }

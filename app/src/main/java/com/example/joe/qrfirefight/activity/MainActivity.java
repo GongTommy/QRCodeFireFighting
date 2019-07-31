@@ -22,19 +22,17 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.example.joe.qrfirefight.R;
 import com.example.joe.qrfirefight.adapter.FirePagerAdapter;
 import com.example.joe.qrfirefight.adapter.HistoryItemAdapter;
 import com.example.joe.qrfirefight.base.BaseMvpActivity;
 import com.example.joe.qrfirefight.database.DBManager;
 import com.example.joe.qrfirefight.model.HistoryModel;
-import com.example.joe.qrfirefight.model.UploadHisMsgModel;
+import com.example.joe.qrfirefight.model.BaseModel;
 import com.example.joe.qrfirefight.present.MainPresent;
 import com.example.joe.qrfirefight.utils.Utils;
 import com.example.joe.qrfirefight.view.IMainView;
 import com.google.gson.Gson;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,7 +62,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
     private Button btnLogout;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)  {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
 
@@ -355,7 +353,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
     }
 
     @Override
-    public void uploadEquipMsgSuccess(UploadHisMsgModel uploadHistoryModel) {
+    public void uploadEquipMsgSuccess(BaseModel uploadHistoryModel) {
         pbLoading.setVisibility(View.INVISIBLE);
         if (uploadHistoryModel == null){
             Utils.getInstance().showLongToast("上传异常");

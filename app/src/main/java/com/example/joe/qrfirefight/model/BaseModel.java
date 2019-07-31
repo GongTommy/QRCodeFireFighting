@@ -1,18 +1,29 @@
 package com.example.joe.qrfirefight.model;
 
+import java.util.List;
+
 /**
  * Created by 18145288 on 27/5/2019.
  */
 
-public class UploadHisMsgModel {
-
+public class BaseModel<T> {
     /**
      * Code : 1
-     * Msg : 成功
+     * Msg : 发送成功
+     * Data : []
      */
 
+    private List<T> Data;
     private int Code;
     private String Msg;
+
+    public List<T> getData() {
+        return Data;
+    }
+
+    public void setData(List<T> Data) {
+        this.Data = Data;
+    }
 
     public int getCode() {
         return Code;
