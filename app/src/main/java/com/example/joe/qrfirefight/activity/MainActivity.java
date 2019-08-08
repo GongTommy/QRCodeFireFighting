@@ -142,6 +142,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
                     public boolean onKey(View view, int i, KeyEvent keyEvent) {
                         Log.i(TAG, "code:" + i + " Event:" + keyEvent.getKeyCode() + "hashCode:" + view.hashCode());
                         String text = etQrCode.getText() != null ? etQrCode.getText().toString() : "";
+                        Log.i(TAG, "扫描数据:" + text);
                         if (KeyEvent.KEYCODE_ENTER == i && !text.equals("")){
                             btnSubmitLocal.setBackground(getResources().getDrawable(R.drawable.submit_data_change_bg));
                             return true;//使按键事件失效

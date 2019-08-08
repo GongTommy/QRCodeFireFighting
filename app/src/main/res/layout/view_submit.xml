@@ -25,11 +25,13 @@
                 android:id="@+id/et_qr_code"
                 android:textSize="15sp"
                 android:maxLines="1"
-                android:maxLength="6"
-                android:inputType="number|phone"
-                android:digits="1234567890"
+                android:maxLength="14"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+            <!--et_qr_code三厂扫码限制条件-->
+            <!--android:maxLength="6"-->
+            <!--android:inputType="number|phone"-->
+            <!--android:digits="1234567890"-->
         </LinearLayout>
         <LinearLayout
             android:layout_marginTop="10dp"

@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.example.joe.qrfirefight.R;
 import com.example.joe.qrfirefight.activity.ScheTimeActivity;
@@ -31,6 +32,7 @@ import com.example.joe.qrfirefight.adapter.CustomArrayAdapter;
 import com.example.joe.qrfirefight.adapter.SelectorAdapter;
 import com.example.joe.qrfirefight.model.ScheTimeEntity;
 import com.example.joe.qrfirefight.model.ScheTimeSubmitEntity;
+import com.example.joe.qrfirefight.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +43,14 @@ import java.util.List;
 
 public class ScheTimeFragment extends Fragment {
     private final String TAG = "ScheTimeFragment";
-    private Button btnRefresh;
+    private RelativeLayout rlRefresh;
     private RecyclerView rlSelect;
     private SelectorAdapter selectorAdapter;
     private ViewPager parentVp;
     private AutoCompleteTextView atvContent;
     private List<String> autoDatas;
     private CustomArrayAdapter<String> atvAdapter;
-    private Button btnLogout;
+    private RelativeLayout rlLogout;
 
 
     @Nullable
@@ -63,10 +65,10 @@ public class ScheTimeFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        btnRefresh = view.findViewById(R.id.btnRefresh);
+        rlRefresh = view.findViewById(R.id.rlRefresh);
         rlSelect = view.findViewById(R.id.rlSelect);
         atvContent = view.findViewById(R.id.atvContent);
-        btnLogout = view.findViewById(R.id.btnLogout);
+        rlLogout = view.findViewById(R.id.rlLogout);
 
         initData();
     }
@@ -78,7 +80,7 @@ public class ScheTimeFragment extends Fragment {
     }
 
     private void initData() {
-        btnRefresh.setOnClickListener(new View.OnClickListener() {
+        rlRefresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ScheTimeActivity scheTimeActivity = (ScheTimeActivity) getActivity();
@@ -123,7 +125,7 @@ public class ScheTimeFragment extends Fragment {
                 return false;
             }
         });
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        rlLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
@@ -155,9 +157,12 @@ public class ScheTimeFragment extends Fragment {
         }
     }
 
-    public void refreshData(List<ScheTimeEntity> list) {
+    public void refreshData(List<ScheTimeEntity> list, Boolean isRefresh) {
         if (list == null || list.size() == 0) {
             return;
+        }
+        if (isRefresh != null && isRefresh == true){
+            Utils.getInstance().showShortToast("刷新数据成功");
         }
         selectorAdapter = new SelectorAdapter(list, getActivity());
         rlSelect.setAdapter(selectorAdapter);

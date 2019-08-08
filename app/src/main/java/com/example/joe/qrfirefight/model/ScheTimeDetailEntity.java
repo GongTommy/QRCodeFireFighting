@@ -88,7 +88,7 @@ public class ScheTimeDetailEntity {
     private String id;
     private String readstatus;
     private String billno;
-    private float linenum;
+    private int linenum;
     private String tradetype;
     private String billdate;
     private String ieflag;
@@ -190,11 +190,11 @@ public class ScheTimeDetailEntity {
         this.billno = billno;
     }
 
-    public float getLinenum() {
+    public int getLinenum() {
         return linenum;
     }
 
-    public void setLinenum(float linenum) {
+    public void setLinenum(int linenum) {
         this.linenum = linenum;
     }
 

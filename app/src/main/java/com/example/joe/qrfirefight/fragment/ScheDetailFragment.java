@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.joe.qrfirefight.R;
 import com.example.joe.qrfirefight.activity.ScheTimeActivity;
 import com.example.joe.qrfirefight.adapter.DetailAdapter;
-import com.example.joe.qrfirefight.adapter.SelectorAdapter;
 import com.example.joe.qrfirefight.model.ScheTimeDetailEntity;
-
 import java.util.List;
 
 /**
@@ -28,6 +27,8 @@ public class ScheDetailFragment extends Fragment implements View.OnClickListener
     private ViewPager parentVp;
     private RecyclerView rlDetail;
     private DetailAdapter selectorAdapter;
+    private TextView tv3;//排期单号
+    private String billNo;//当前的billNo
 
     @Nullable
     @Override
@@ -42,6 +43,7 @@ public class ScheDetailFragment extends Fragment implements View.OnClickListener
         btnPre = view.findViewById(R.id.btnPre);
         btnNext = view.findViewById(R.id.btnNext);
         rlDetail = view.findViewById(R.id.rlDetail);
+        tv3 = view.findViewById(R.id.tv3);
         initData();
     }
 
@@ -74,5 +76,12 @@ public class ScheDetailFragment extends Fragment implements View.OnClickListener
         selectorAdapter = new DetailAdapter(list, getActivity());
         rlDetail.setAdapter(selectorAdapter);
         rlDetail.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+    }
+
+    public void setBillNo(String billNo){
+        this.billNo = billNo;
+        if (billNo != null && tv3 != null){
+            tv3.setText(billNo);
+        }
     }
 }

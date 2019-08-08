@@ -52,6 +52,7 @@ public class ScheTimeActivity extends BaseMvpActivity<IScheTimeView, ScheTimePre
     public  String WORKER_NUM = "worker_num";
     private ScheTimeSubmitEntity scheTimeSubmitEntity = new ScheTimeSubmitEntity();
     private List<ScheTimeEntity> scheTimeEntities;
+    private Boolean isRefresh;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -218,7 +219,8 @@ public class ScheTimeActivity extends BaseMvpActivity<IScheTimeView, ScheTimePre
     @Override
     public void getScheTimeDatasSuccess(List<ScheTimeEntity> list) {
         scheTimeEntities = list;
-        fragment1.refreshData(list);
+        fragment1.refreshData(list, isRefresh);
+        isRefresh = false;
         if (pb != null){
             pb.setVisibility(View.GONE);
         }
@@ -277,6 +279,7 @@ public class ScheTimeActivity extends BaseMvpActivity<IScheTimeView, ScheTimePre
         if (mPresent == null){
             return;
         }
+        isRefresh = true;
         pb.setVisibility(View.VISIBLE);
         mPresent.getScheTimeDatas();
     }
@@ -295,6 +298,9 @@ public class ScheTimeActivity extends BaseMvpActivity<IScheTimeView, ScheTimePre
 
         scheTimeSubmitEntity.setBillno(billNo);
         handleSubmitEntity(billNo);
+        if (fragment2 != null){
+            fragment2.setBillNo(billNo);
+        }
     }
 
     private void handleSubmitEntity(String billNo){

@@ -36,10 +36,12 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
             return;
         }
         ScheTimeDetailEntity entity = list.get(position);
-//        holder.tvRS.setText(entity.getReadstatus() == null ? "" : entity.getReadstatus());
-//        holder.tvBN.setText(entity.getBillno() == null ? "" : entity.getBillno());
-//        holder.tvLN.setText(String.valueOf(entity.getLinenum()));
-//        holder.tvTT.setText(entity.getTradetype() == null ? "" : entity.getTradetype());
+        if (entity != null){
+            holder.tvCG.setText(entity.getCopgno() != null ? entity.getCopgno() : "");
+            holder.tvEQ.setText(String.valueOf(entity.getErpqty()));
+            holder.tvLN.setText(String.valueOf(entity.getLinenum()));
+            holder.tvIndex.setText(String.valueOf(position + 1));
+        }
     }
 
     @Override
@@ -48,27 +50,16 @@ public class DetailAdapter extends RecyclerView.Adapter<DetailAdapter.DetailView
     }
 
     class DetailViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvBN;
         private TextView tvCG;
-        private TextView tvQQ;
+        private TextView tvEQ;
         private TextView tvLN;
-        private ConstraintLayout cl;
+        private TextView tvIndex;
         public DetailViewHolder(View itemView) {
             super(itemView);
-            cl = itemView.findViewById(R.id.cl);
-            tvBN = itemView.findViewById(R.id.tvBN);
+            tvIndex = itemView.findViewById(R.id.tvIndex);
             tvCG = itemView.findViewById(R.id.tvCG);
-            tvQQ = itemView.findViewById(R.id.tvQQ);
+            tvEQ = itemView.findViewById(R.id.tvEQ);
             tvLN = itemView.findViewById(R.id.tvLN);
-            cl.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ScheTimeActivity scheTimeActivity = (ScheTimeActivity) mContext;
-                    if (scheTimeActivity != null){
-                        scheTimeActivity.refreshSubmitPage();
-                    }
-                }
-            });
         }
     }
 }

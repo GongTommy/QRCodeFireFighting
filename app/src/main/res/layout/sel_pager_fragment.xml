@@ -4,31 +4,61 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/btnRefresh"
+    <RelativeLayout
+        android:id="@+id/rlRefresh"
         android:layout_width="130dp"
         android:layout_height="40dp"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
-        android:text="@string/refresh"
         android:background="@drawable/normal_bg"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+        <ImageView
+            android:id="@+id/iv1"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/refresh"
+            android:scaleType="fitEnd"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv1"/>
+    </RelativeLayout>
 
-    <Button
-        android:id="@+id/btnLogout"
+    <RelativeLayout
+        android:id="@+id/rlLogout"
         android:layout_width="130dp"
         android:layout_height="40dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="10dp"
         android:text="註銷"
         android:background="@drawable/normal_bg"
-        app:layout_constraintBottom_toBottomOf="@+id/btnRefresh"
-        />
+        app:layout_constraintBottom_toBottomOf="@+id/rlRefresh"
+        >
+        <ImageView
+            android:id="@+id/iv2"
+            android:layout_width="65dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/logout"
+            android:scaleType="fitEnd"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logout"
+            android:textColor="@color/black"
+            android:layout_marginLeft="3dp"
+            android:textSize="16sp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/iv2"/>
+    </RelativeLayout>
     <ImageView
         android:id="@+id/ivSearch"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnRefresh"
+        app:layout_constraintTop_toBottomOf="@+id/rlRefresh"
         android:layout_marginTop="10dp"
         android:layout_width="50dp"
         android:layout_height="50dp"
