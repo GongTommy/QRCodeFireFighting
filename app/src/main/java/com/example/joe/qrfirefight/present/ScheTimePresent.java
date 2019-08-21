@@ -53,6 +53,10 @@ public class ScheTimePresent extends BasePresent<IScheTimeView> {
         });
     }
 
+    /**
+     * 提交所有二维码数据
+     * @param list
+     */
     public void submitScheTimeDatas(List<ScheTimeSubmitEntity> list){
         NetManager.getInstance().submitScheTimeDatas(list, new WsCallBack() {
             @Override
@@ -65,6 +69,22 @@ public class ScheTimePresent extends BasePresent<IScheTimeView> {
             public void onFailed(Throwable ResponseBody) {
                 Log.i(TAG, "onFailed:" + new Gson().toJson(ResponseBody));
                 getView().submitScheTimeDatasFailed();
+            }
+        });
+    }
+
+    public void schedulDataCheck(String billNo, String localQrCodes) {
+        NetManager.getInstance().schedulDataCheck(billNo, localQrCodes, new WsCallBack() {
+            @Override
+            public void onSuccess(BaseModel baseModel) {
+                Log.i(TAG, "check success");
+                getView().schedulDataCheckSuccess(baseModel);
+            }
+
+            @Override
+            public void onFailed(Throwable responseBody) {
+                Log.i(TAG, "check failed");
+                getView().schedulDataCheckFailed(responseBody);
             }
         });
     }

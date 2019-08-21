@@ -17,6 +17,7 @@ import retrofit2.http.Query;
 
 /**
  * Created by 18145288 on 27/5/2019.
+ * 接口类
  */
 
 public interface Api {
@@ -37,4 +38,8 @@ public interface Api {
     @Headers({"Content-Type: application/json","Accept: application/json"})
     @POST("actionapi/Index/SchedulAutoData")
     Observable<BaseModel> submitSchedulAutoData(@Body List<ScheTimeSubmitEntity> list);
+
+    @Headers({"Content-Type: application/json","Accept: application/json"})
+    @GET("actionapi/Index/SchedulDataCheck")
+    Observable<BaseModel> schedulDataCheck(@Query("BillNo") String billno, @Query("PackBarCodes") String packBarCodes);
 }

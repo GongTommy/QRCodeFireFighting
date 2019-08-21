@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +32,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.internal.Util;
+
 
 /**
  * Created by 18145288 on 2019/6/26.
@@ -47,6 +51,9 @@ public class ScheSubmitFragment extends Fragment implements View.OnClickListener
     private ScheTimeActivity scheTimeActivity;
     private ScheTimeSubmitEntity scheTimeDetailEntity;
     public  String WORKER_NUM = "worker_num";
+    private ScheHisAdapter scheHisAdapter;
+    private String currCode;
+    private String barCodes;
 
     @Nullable
     @Override
@@ -77,7 +84,7 @@ public class ScheSubmitFragment extends Fragment implements View.OnClickListener
         btnSubmit.setOnClickListener(this);
         btnNext.setEnabled(false);
         scheTimeDatas = new ArrayList<>();
-        final ScheHisAdapter scheHisAdapter = new ScheHisAdapter(scheTimeDatas);
+        scheHisAdapter = new ScheHisAdapter(scheTimeDatas);
         scheHisAdapter.setOnItemDelClickListener(new ScheHisAdapter.OnItemDelClickListener() {
             @Override
             public void onItemDelClickListener(final int position) {
@@ -117,28 +124,74 @@ public class ScheSubmitFragment extends Fragment implements View.OnClickListener
                         return true;
                     }
                     addTime++;
-                    ScheTimeSubmitEntity entity = new ScheTimeSubmitEntity();
-                    if (scheTimeDetailEntity != null){
-                        entity.setBillno(scheTimeDetailEntity.getBillno());
-                        entity.setBilldate(scheTimeDetailEntity.getBilldate());
+                    if (scheTimeActivity != null){
+                        String billNo = null;
+                        if (scheTimeDetailEntity != null){
+                            billNo = scheTimeDetailEntity.getBillno();
+                        }
+                        if (etScheCode != null && etScheCode.getText() != null){
+                            barCodes = etScheCode.getText().toString();
+                            currCode = etScheCode.getText().toString();
+                        }
+                        if (scheTimeDatas != null && scheTimeDatas.size() > 0){
+                            for(int j = 0; j < scheTimeDatas.size(); j++){
+                                ScheTimeSubmitEntity item = scheTimeDatas.get(j);
+                                String itemCode = item.getPackbarcode();
+                                barCodes += "," + itemCode;
+                            }
+                        }
+                        if (scheTimeActivity != null){
+                            Log.i("SubmitFragment", "billNo:" + billNo + " barCodes:" + barCodes);
+                            scheTimeActivity.checkQrCodeExist(billNo, barCodes);
+                        }
                     }
-                    if (etScheCode != null && etScheCode.getText() != null){
-                        entity.setPackbarcode(etScheCode.getText().toString());
-                    }
-                    String date = dateToStrLong(new Date());
-                    String userID = Utils.getInstance().getStrSp(WORKER_NUM);
-                    entity.setCreateuserid(userID);
-                    entity.setCreateusername(userID);
-                    entity.setUploaddate(date);
-                    scheTimeDatas.add(entity);
-                    scheHisAdapter.notifyDataSetChanged();
                     etScheCode.setText("");
-                    tvNum.setText(String.valueOf(scheTimeDatas.size()));
                     return true;
                 }
                 return false;
             }
         });
+    }
+
+    /**
+     * 添加数据到列表
+     */
+    public void addDataToList(){
+        ScheTimeSubmitEntity entity = new ScheTimeSubmitEntity();
+        if (scheTimeDetailEntity != null){
+            entity.setBillno(scheTimeDetailEntity.getBillno());
+            entity.setBilldate(scheTimeDetailEntity.getBilldate());
+        }
+        entity.setPackbarcode(currCode);
+        String date = dateToStrLong(new Date());
+        String userID = Utils.getInstance().getStrSp(WORKER_NUM);
+        entity.setCreateuserid(userID);
+        entity.setCreateusername(userID);
+        entity.setUploaddate(date);
+        if (!isBarCodeExist(entity.getPackbarcode())){
+            scheTimeDatas.add(entity);
+        } else {
+            Utils.getInstance().showShortToast("重复数据");
+        }
+        scheHisAdapter.notifyDataSetChanged();
+        tvNum.setText(String.valueOf(scheTimeDatas.size()));
+    }
+
+    public boolean isBarCodeExist(String barCode){
+        if (scheTimeDatas == null){
+            return false;
+        }
+        boolean flag = false;
+        for(int i = 0; i < scheTimeDatas.size(); i++){
+            ScheTimeSubmitEntity entity = scheTimeDatas.get(i);
+            if(entity != null){
+                String entityCode = entity.getPackbarcode();
+                if (entityCode != null && entityCode.equals(barCode)){
+                    flag = true;
+                }
+            }
+        }
+        return flag;
     }
 
     public static String dateToStrLong(java.util.Date dateDate) {

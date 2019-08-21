@@ -35,7 +35,6 @@
         android:layout_height="40dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginRight="10dp"
-        android:text="註銷"
         android:background="@drawable/normal_bg"
         app:layout_constraintBottom_toBottomOf="@+id/rlRefresh"
         >

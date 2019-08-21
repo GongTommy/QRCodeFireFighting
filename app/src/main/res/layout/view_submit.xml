@@ -70,5 +70,5 @@
         android:layout_marginRight="10dp"
         android:layout_width="70dp"
         android:layout_height="40dp"
-        android:text="注销"/>
+        android:text="@string/logout"/>
 </RelativeLayout>

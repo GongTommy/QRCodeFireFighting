@@ -1,6 +1,7 @@
 package com.example.joe.qrfirefight.view;
 
 import com.example.joe.qrfirefight.base.IBaseView;
+import com.example.joe.qrfirefight.model.BaseModel;
 import com.example.joe.qrfirefight.model.ScheTimeDetailEntity;
 import com.example.joe.qrfirefight.model.ScheTimeEntity;
 
@@ -26,4 +27,10 @@ public interface IScheTimeView extends IBaseView {
      */
     void submitScheTimeDatasSuccess();
     void submitScheTimeDatasFailed();
+
+    /**
+     * 验证排期单，和二维码，查看其是否存在或者过期
+     */
+    void schedulDataCheckSuccess(BaseModel baseModel);
+    void schedulDataCheckFailed(Throwable throwable);
 }

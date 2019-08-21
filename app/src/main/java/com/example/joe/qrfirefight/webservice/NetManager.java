@@ -92,4 +92,12 @@ public class NetManager {
                 .subscribe(wsCallBack);
     }
 
+    /**
+     * 验证排期单是否已经提交过
+     */
+    public void schedulDataCheck(String billNo, String localQrCodes, WsCallBack wsCallBack){
+        api.schedulDataCheck(billNo, localQrCodes)
+                .compose(WsTransformer.instance())
+                .subscribe(wsCallBack);
+    }
 }

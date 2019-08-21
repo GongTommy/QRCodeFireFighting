@@ -23,6 +23,7 @@ import com.example.joe.qrfirefight.base.BaseMvpActivity;
 import com.example.joe.qrfirefight.fragment.ScheDetailFragment;
 import com.example.joe.qrfirefight.fragment.ScheSubmitFragment;
 import com.example.joe.qrfirefight.fragment.ScheTimeFragment;
+import com.example.joe.qrfirefight.model.BaseModel;
 import com.example.joe.qrfirefight.model.ScheTimeDetailEntity;
 import com.example.joe.qrfirefight.model.ScheTimeEntity;
 import com.example.joe.qrfirefight.model.ScheTimeSubmitEntity;
@@ -273,6 +274,40 @@ public class ScheTimeActivity extends BaseMvpActivity<IScheTimeView, ScheTimePre
             pb.setVisibility(View.GONE);
         }
         Utils.getInstance().showShortToast("提交失败");
+    }
+
+    public void checkQrCodeExist(String billNo, String localQrCodes){
+        if (mPresent == null || pb == null){
+            return;
+        }
+        mPresent.schedulDataCheck(billNo, localQrCodes);
+        pb.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void schedulDataCheckSuccess(BaseModel baseModel) {
+        if (pb != null){
+            pb.setVisibility(View.INVISIBLE);
+        }
+        if (baseModel == null){
+            Utils.getInstance().showLongToast("网络错误");
+            return;
+        }
+        String msg = baseModel.getMsg();
+        int code = baseModel.getCode();
+        if (code == 1){
+            fragment3.addDataToList();
+        }else {
+            Utils.getInstance().showLongToast(msg != null ? msg : "");
+        }
+    }
+
+    @Override
+    public void schedulDataCheckFailed(Throwable throwable) {
+        if (pb != null){
+            pb.setVisibility(View.INVISIBLE);
+        }
+        Utils.getInstance().showLongToast("网络错误");
     }
 
     public void refreshScheTimeDatas(){

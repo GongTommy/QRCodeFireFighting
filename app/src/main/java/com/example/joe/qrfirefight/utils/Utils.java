@@ -3,6 +3,7 @@ package com.example.joe.qrfirefight.utils;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.view.Gravity;
 import android.widget.Toast;
 
 /**
@@ -67,13 +68,17 @@ public class Utils {
         if (mContext == null){
             return;
         }
-        Toast.makeText(mContext, showStr, Toast.LENGTH_SHORT).show();
+        Toast toast = Toast.makeText(mContext, showStr, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, -120);
+        toast.show();
     }
 
     public void showLongToast(String showStr){
         if (mContext == null){
             return;
         }
-        Toast.makeText(mContext, showStr, Toast.LENGTH_LONG).show();
+        Toast toast = Toast.makeText(mContext, showStr, Toast.LENGTH_LONG);
+        toast.setGravity(Gravity.CENTER, 0, -120);
+        toast.show();
     }
 }
