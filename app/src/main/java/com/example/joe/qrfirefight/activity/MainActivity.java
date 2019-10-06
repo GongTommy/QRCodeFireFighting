@@ -57,9 +57,14 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
     private ProgressBar pbLoading;
     private final String TAG = "MainActivity";
     private AlertDialog alertDialog;
+    private AlertDialog delDialog;
     private EditText etWorkNum;
     private HistoryItemAdapter historyItemAdapter;
     private Button btnLogout;
+    private final int LOGIN_DIALOG = 1;
+    private final int DEL_ITEM_DIALOG = 2;
+    private int currDelPosition;
+    private EditText etDel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +99,35 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
         initDialogListener(alertDialog, contentView);
     }
 
+    private void showDelDialog(){
+        View contentView = View.inflate(MainActivity.this, R.layout.login_dialog_view, null);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle("删除条目");
+        builder.setView(contentView);
+        delDialog = builder.create();
+        delDialog.show();
+
+        etDel = contentView.findViewById(R.id.et_work_number);
+        Button btnPos = contentView.findViewById(R.id.btnPos);
+        btnPos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                vertifyQrCode(etDel, delDialog, DEL_ITEM_DIALOG);
+            }
+        });
+        etDel.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                Log.i(TAG, "code:" + i + " Event:" + keyEvent.getKeyCode() + "hashCode:" + view.hashCode());
+                if (KeyEvent.KEYCODE_ENTER == i) {
+                    vertifyQrCode(etDel, delDialog, DEL_ITEM_DIALOG);
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
 //    @Override
 //    protected void onStop() {
 //        super.onStop();
@@ -112,7 +146,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
         btnPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               vertifyQrCode(etWorkNum, alertDialog);
+               vertifyQrCode(etWorkNum, alertDialog, LOGIN_DIALOG);
             }
         });
         btnNev.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +160,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 Log.i(TAG, "code:" + i + " Event:" + keyEvent.getKeyCode() + "hashCode:" + view.hashCode());
                 if (KeyEvent.KEYCODE_ENTER == i) {
-                    vertifyQrCode(etWorkNum, alertDialog);
+                    vertifyQrCode(etWorkNum, alertDialog, LOGIN_DIALOG) ;
                     return true;
                 }
                 return false;
@@ -159,7 +193,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
      * @param etWorkNum
      * @param alertDialog
      */
-    public void vertifyQrCode(EditText etWorkNum, AlertDialog alertDialog){
+    public void vertifyQrCode(EditText etWorkNum, AlertDialog alertDialog, int code){
         String text = etWorkNum.getText() != null ? etWorkNum.getText().toString() : "";
         String pattern = "\\d{8}";
         boolean flag = Pattern.matches(pattern, text);
@@ -172,7 +206,22 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
             alertDialog.dismiss();
             etWorkNum.setText("");
             Utils.getInstance().saveStrSp(WORKER_NUM, text);
-            Utils.getInstance().showShortToast("登录成功");
+            if (code == LOGIN_DIALOG){
+                Utils.getInstance().showShortToast("登录成功");
+            }else if (code == DEL_ITEM_DIALOG) {
+                //删除条目
+                if (models == null || models.size() == 0){
+                    Utils.getInstance().showShortToast("删除失败");
+                    return;
+                }
+                if (models.get(currDelPosition) != null){
+                    dbManager.delete(models.get(currDelPosition).getEquipmentid());
+                }
+                models.remove(currDelPosition);
+                historyItemAdapter.notifyDataSetChanged();
+                tvNum.setText("条数：" + String.valueOf(models.size()));
+                Utils.getInstance().showShortToast("删除成功");
+            }
         }
     }
 
@@ -296,14 +345,9 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
                         historyItemAdapter.setOnItemDelClickListener(new HistoryItemAdapter.OnItemDelClickListener() {
                             @Override
                             public void onItemDelClickListener(int position) {
-
                                 if (models != null && models.size() > position){
-                                    if (models.get(position) != null){
-                                        dbManager.delete(models.get(position).getEquipmentid());
-                                    }
-                                    models.remove(position);
-                                    historyItemAdapter.notifyDataSetChanged();
-                                    tvNum.setText("条数：" + String.valueOf(models.size()));
+                                    currDelPosition = position;
+                                    showDelDialog();
                                 }else {
                                     tvNum.setText("条数：" + String.valueOf(0));
                                 }
