@@ -35,9 +35,12 @@ import com.example.joe.qrfirefight.view.IMainView;
 import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import okhttp3.internal.Util;
 
 public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implements IMainView{
     private ViewPager vp_content;
@@ -112,7 +115,15 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
         btnPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                vertifyQrCode(etDel, delDialog, DEL_ITEM_DIALOG);
+//                vertifyQrCode(etDel, delDialog, DEL_ITEM_DIALOG);
+
+                String etText = etDel.getText() != null ? etDel.getText().toString() : "";
+                String loginName = Utils.getInstance().getStrSp(WORKER_NUM);
+                if (loginName != null && loginName.equals(etText)){
+                    vertifyQrCode(etDel, delDialog, DEL_ITEM_DIALOG);
+                }else {
+                    Utils.getInstance().showLongToast("输入工号错误！");
+                }
             }
         });
         etDel.setOnKeyListener(new View.OnKeyListener() {
@@ -146,7 +157,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
         btnPos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-               vertifyQrCode(etWorkNum, alertDialog, LOGIN_DIALOG);
+                vertifyQrCode(etWorkNum, alertDialog, LOGIN_DIALOG);
             }
         });
         btnNev.setOnClickListener(new View.OnClickListener() {
@@ -256,6 +267,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
+                                Utils.getInstance().saveStrSp(WORKER_NUM, "");
                                 alertDialog.show();
                             }
                         })
@@ -337,6 +349,7 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
                     //历史记录数据
                     models = dbManager.queryAllData();
                     if (models != null){
+                        Collections.reverse(models);//反转models，使每次新扫描的数据排到第一个
                         historyItemAdapter = new HistoryItemAdapter(models);
                         rvHistory.setLayoutManager(new LinearLayoutManager(MainActivity.this, LinearLayoutManager.VERTICAL, false));
                         rvHistory.setAdapter(historyItemAdapter);
@@ -355,6 +368,8 @@ public class MainActivity extends BaseMvpActivity<IMainView, MainPresent> implem
                             }
                         });
                     }
+                }else if (position == 0){
+                    etQrCode.requestFocus();
                 }
             }
 
